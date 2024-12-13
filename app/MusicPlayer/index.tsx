@@ -53,10 +53,14 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       padding: 20,
       alignSelf:'center',
-      gap:20
+      gap:20,
+      backgroundColor:'gray',
+      flexDirection:'row',
+      width:'100%',
+      flex:1
     },
     title: {
-      fontSize: 24,
+      fontSize: 30,
       marginBottom: 20,
     },
   });
