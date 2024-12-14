@@ -2,15 +2,16 @@
 
 # dependencies
 node_modules/
+scripts
+hooks
+constants
+components
+assets
+
 # Expo
 .expo/
 dist/
 web-build/
-scripts/
-hooks/
-constants/
-components/
-assets/
 expo-env.d.ts
 
 # Native
