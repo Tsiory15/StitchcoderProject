@@ -1,19 +1,17 @@
 import {View,StyleSheet,ScrollView} from 'react-native'
 import { Slot } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import Icon from './components/icon'
 export default function RootLayout() {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.header}>
-        <View>Icon</View>
+        <Icon name='bars'/>
         <View>Icon</View>
         <View>Icon</View>
       </View>
-    <ScrollView style={styles.mainContainer}>
-      <View style={{marginTop:50}}>
+    <ScrollView style={{flexGrow:1}}>
         <Slot/>
-      </View>
     </ScrollView>
     </SafeAreaView>
   )
@@ -22,16 +20,14 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   header:{
     height:50,
-    display:'flex',
-    justifyContent:'space-around',
+    justifyContent:'space-between',
     alignItems:'center',
     flexDirection:'row',
-    position:'fixed',
-    zIndex:10,
     width:'100%',
-    backgroundColor:'white'
+    backgroundColor:'white',
+    padding:20
   },
   mainContainer:{
-    flex:1
+    flex:1,
   }
 })

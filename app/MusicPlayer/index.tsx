@@ -1,67 +1,110 @@
-import {View,Text,Button,StyleSheet} from 'react-native'
-import {Audio} from 'expo-av'
-import React,{ useState } from 'react'
+import {View,StyleSheet,TouchableOpacity,Text, Image} from "react-native";
+import React,{ useEffect,useState } from "react";
+import Slider from "@react-native-community/slider";
+import TrackPlayer,{usePlaybackState,useProgress,State} from "react-native-track-player";
+import {PlayerSetting}from './Service'
 import Icon from '@expo/vector-icons/FontAwesome6'
 
-export default function Player () {
-    const [son,setSon] = useState<Audio.Sound | null>(null);
-    const [play,setPlay] = useState(false);
+const Track = [{
+    id:'1',
+    url:require('../public/Adele_Hello.mp3'),
+    title:'Song1',
+    artist:'Artist1'
+},
+{
+    id:'2',
+    url:require('../public/Heart_Attack.mp3'),
+    title:'Song2',
+    artist:'Artist2'
+}
+]
 
-    const Player = async () => {
-        if (!son){
-            const {sound:newSound} = await Audio.Sound.createAsync(
-                require('../public/Adele_Hello.mp3')
-            );
-            setSon(newSound);
-            await newSound.playAsync();
-            setPlay(true);
+export default function Player(){
+    const playBackState = usePlaybackState();
+    const {position,duration} = useProgress();
+    const [track,setTrack] = useState(0);
 
-            newSound.setOnPlaybackStatusUpdate((status) => {
-                if(status.isLoaded && status.didJustFinish){
-                    setPlay(false);
-                }
-            });
-        }else{
-            await son.playAsync();
-            setPlay(true);
+
+    useEffect(()=>{
+        const initialisePlayer = async () => {
+            await PlayerSetting();
+            await TrackPlayer.add(Track)   
         }
-    };
-
-    const pause = async () => {
-        if(son){
-            await son.pauseAsync();
-            setPlay(false);
-        }
+    initialisePlayer();
+    return() => {
+        const clean = async () => {
+            await TrackPlayer.reset();
+        };
+        clean();
     }
-
-    const stop = async () => {
-        if(son){
-            await son.stopAsync();
-            setPlay(false);
-        }
+    }  
+,[]);
+const PlayPause = async () => {
+    const state = typeof playBackState === 'object' ? playBackState.state : playBackState;
+    if(state === State.Playing){
+        await TrackPlayer.pause();
+    }else{
+        await TrackPlayer.play();
     }
+}
+
+const Next = async () => {
+    await TrackPlayer.skipToNext();
+    setTrack((prev) => (prev - 1 + Track.length));
+};
+
+const Prev = async () => {
+    await TrackPlayer.skipToPrevious();
+    setTrack((prev) => (prev - 1 + Track.length) % Track.length);
+}
+
+const currentState = typeof playBackState === 'object' ? playBackState.state : playBackState;
     return(
-        <View style={styles.container}>
-            <Icon name={play ? 'pause' : 'play'} size={50} onPress={play ? pause : Player} />
-            <Icon name="stop" size={50} onPress={stop} />
-    </View>
+        <View style={styles.playerMainContainer}>
+            <Image source={require('../public/4.png')} style={{ width: 230, height: 230 }}/>
+            <Slider
+            style={{width:'80%',height:40}}
+            value={position}
+            minimumValue={0}
+            maximumValue={duration}
+            onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
+            />
+            <View style={styles.durationContainer}>
+                <Text>{Math.floor(position)}s</Text>
+                <Text>{Math.floor(duration)}s</Text>
+            </View>
+            <View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={Prev}>
+                        <Icon name='backward' size={50}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={PlayPause}>
+                        <Icon name={currentState === State.Playing ? 'play' : 'pause'} size={50}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={Next}>
+                        <Icon name='forward' size={50}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
     )
 }
 const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      alignSelf:'center',
-      gap:20,
-      backgroundColor:'gray',
-      flexDirection:'row',
-      width:'100%',
-      flex:1
+    playerMainContainer:{
+        flex:1,
+        padding:10,
+        backgroundColor:'gray',
+        alignItems:'center',
     },
-    title: {
-      fontSize: 30,
-      marginBottom: 20,
+    buttonContainer:{
+        flexDirection:'row',
+        gap:50
     },
-  });
-  
+    durationContainer:{
+        position:'relative',
+        flexDirection:'row',
+        justifyContent:'space-between',
+        width:'80%'
+    }
+
+})
