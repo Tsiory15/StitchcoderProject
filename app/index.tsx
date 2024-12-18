@@ -5,7 +5,7 @@ export default function Index() {
   return (
     <View style={styles.mainContainer}>
       <View style={{marginBottom:20}}>
-        <Text>Bonjour,Luck Explorez des ressources pour le bien-être du corps et de l'ésprit</Text>
+        <Text style={{color:"white"}}>Bonjour,Luck Explorez des ressources pour le bien-être du corps et de l'ésprit</Text>
       </View>
       <View style={{width:'100%',alignItems:'center'}}>
           <Image source={require('./public/1.png')} style={{ width: 230, height: 230 }}/>
@@ -18,11 +18,11 @@ export default function Index() {
       </View>
       {/* Navigation */}
       <View style={{width:'100%',marginBottom:20}}>
-        <Text style={{fontSize:20}}>What do you need?</Text>
+        <Text style={{fontSize:20, color:"white"}}>What do you need?</Text>
       </View>
       <View style={styles.imageContainer}>
 
-        <TouchableOpacity style={styles.Card}>
+        <TouchableOpacity style={styles.Card} onPress={() => router.push('./Relaxation')}>
           <Image source={require('./public/3.png')} style={styles.imagePosition}/>
           <View>
             <Text>Relaxation Relacher votre stress</Text>
@@ -30,7 +30,7 @@ export default function Index() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.Card} onPress={() => router.push('/MusicPlayer')}>
+        <TouchableOpacity style={styles.Card} onPress={() => router.push('./MusicPlayer')}>
           <Image source={require('./public/2.png')} style={styles.imagePosition}/>
           <View>
             <Text>Music Music de détente</Text>
@@ -39,14 +39,13 @@ export default function Index() {
         </TouchableOpacity>
       </View>
       <View>
-
       </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
   mainContainer:{
-    backgroundColor:'gray',
+    backgroundColor:'#28373A',
     flex:1,
     alignItems:'center',
     padding:20
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     gap:30
   },
   Card:{
-    width:150,
+    width:'47%',
     height:150,
     borderStyle:'solid',
     borderWidth:1,

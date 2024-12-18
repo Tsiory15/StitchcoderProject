@@ -16,7 +16,7 @@ const Track = [{
     url:require('../public/Heart_Attack.mp3'),
     title:'Song2',
     artist:'Artist2'
-}
+},
 ]
 
 export default function Player(){
